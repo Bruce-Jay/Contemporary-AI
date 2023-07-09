@@ -1,5 +1,5 @@
-torch~=1.13.0+cu116
-numpy~=1.24.3
+torch~=2.0.1
+numpy~=1.25.0
 pandas~=2.0.1
 Pillow~=9.5.0
 pip~=22.0.4
@@ -43,5 +43,5 @@ Werkzeug~=2.3.4
 responses~=0.18.0
 tokenizers~=0.13.3
 torchaudio~=0.13.0+cu116
-transformers~=4.29.1
+transformers~=4.30.2
 zipp~=3.15.0
