@@ -41,6 +41,7 @@ class BartDataset(Dataset):
             # else:
             #     self.des_st_masks.append([0] * len1 + [1] + [0] *
             #                              (self.enc_max_length - len1 - 1))
+
             self.des.append(description + [1] + [0] * (self.enc_max_length - len(description) - 2) + [2])
 
             self.des_attention_masks.append([1] * len(description) + [0] *
@@ -89,3 +90,57 @@ class PredDataset(Dataset):
         input_ids = torch.tensor(self.input_ids[index], dtype=torch.long)
         attention_mask = torch.tensor(self.attention_masks[index], dtype=torch.long)
         return ids, input_ids, attention_mask
+
+class BartDatasetWord(Dataset):
+    def __init__(self, meta_data: list, max_length=160, vocab_size=1400):
+        self.meta_data = meta_data
+        # 序列的最大长度
+        self.enc_max_length = max_length
+        self.dec_max_length = max_length
+        self.vocab_size = vocab_size
+        # 影像医学描述
+        self.des = []
+        # 诊断结果
+        self.diag_inputs = []
+        self.dec_labels = []
+        self.dec_labels_short = []
+        # 特殊 tokens mask
+        self.des_st_masks = []
+        # attention_masks,输入的有效长度
+        self.des_attention_masks = []
+        self.valid_lens = []
+        # 解码器 attention_masks,输入的有效长度
+        self.diag_attention_masks = []
+        for i in range(len(meta_data)):
+            description = meta_data[i][1]
+
+            diagnosis = meta_data[i][2]
+
+            len1 = len(description)
+            len2 = len(diagnosis)
+            # description = description + [5] + diagnosis
+            if len(description) > max_length:
+                description = description[: max_length]
+
+            self.des.append(description + '1' + '0' * (self.enc_max_length - len(description) - 2) + '2')
+
+            self.des_attention_masks.append('1' * len(description) + '0' *
+                                            (self.enc_max_length - len(description)))
+            self.diag_inputs.append('2' + diagnosis + '1' + '0' * (self.dec_max_length - len(diagnosis) - 2))
+            self.dec_labels.append(diagnosis + '1' + '0' * (self.dec_max_length - len(diagnosis) - 2) + '2')
+            self.dec_labels_short.append(diagnosis)
+            self.diag_attention_masks.append('1' * (len(diagnosis) + 1) + '0' *
+                                             (self.dec_max_length - len(diagnosis) - 1))
+            self.valid_lens.append(len(description))
+
+    def __len__(self):
+        return len(self.des)
+
+    def __getitem__(self, index):
+        enc_inputs = torch.tensor([ord(c) for s in self.des[index] for c in s])
+        enc_attention_mask = torch.tensor([ord(c) for s in self.des_attention_masks[index] for c in s])
+        dec_inputs = torch.tensor([ord(c) for s in self.diag_inputs[index] for c in s])
+        dec_labels = torch.tensor([ord(c) for s in self.dec_labels[index] for c in s])
+        dec_masks = torch.tensor([ord(c) for s in self.diag_attention_masks[index] for c in s])
+        return enc_inputs, enc_attention_mask, dec_inputs, dec_labels, dec_masks
+

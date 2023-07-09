@@ -6,8 +6,8 @@ import torch
 
 
 def optimizer_opts(parser):
-    parser.add_argument('--lr', type=float, default=1e-4)
-    parser.add_argument('--weight_decay', type=float, default=0.)
+    parser.add_argument('--lr', type=float, default=5e-3)
+    parser.add_argument('--weight_decay', type=float, default=1e-5)
     parser.add_argument('--optimizer_name', type=str, default="AdamW")
 
 
@@ -23,7 +23,7 @@ def preprocess_data_opts(parser):
 def train_opts(parser):
     parser.add_argument('--n_accumulate', default=1, type=int)
     parser.add_argument('--NUM_WORKERS', type=int, default=8)
-    parser.add_argument('--epochs', type=int, default=20)
+    parser.add_argument('--epochs', type=int, default=100)
 
 
 def model_opts(parser):
@@ -34,7 +34,7 @@ def model_opts(parser):
 
 
 def batch_size_opts(parser):
-    parser.add_argument('--batch_size', type=int, default=4)
+    parser.add_argument('--batch_size', type=int, default=32)
 
 
 def scheduler_opts(parser):

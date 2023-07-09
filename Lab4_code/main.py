@@ -5,7 +5,7 @@ import random
 import numpy as np
 import torch
 from torch.utils.tensorboard import SummaryWriter
-from data.process_data import process_data
+from data.process_data import process_data, transfer_numbers_to_words_train, transfer_numbers_to_words_test, process_data_str
 from data.dataloader import build_pre_bart_dataloader
 from model.small_bart import Seq2SeqModel
 from utils.build_optimizer import build_optimizer
@@ -24,9 +24,16 @@ def main(args):
     model_dir = os.path.join(args.result_dir, 'model')
     if os.path.exists(model_dir) is False:
         os.makedirs(model_dir)
+
+    transfer_numbers_to_words_train('./', 'data/train.csv')
+    transfer_numbers_to_words_test('./', 'data/test.csv')
+
     # Data processing
     data = process_data('./', 'data/train.csv', mode='train')
+    # data = process_data_str('./', 'data/words_train.csv', mode='train')
     test_data = process_data('./', 'data/test.csv', mode='test')
+    # test_data = process_data_str('./', 'data/words_test.csv', mode='test')
+
 
     # split train.csv to train_data and valid_data
     n_split = int(len(data) * 0.8)
@@ -61,10 +68,10 @@ def main(args):
         print('lr:', cur_lr)
         print('weight decay:', optimizer.state_dict()['param_groups'][0]['weight_decay'])
         train_loss = train_one_epoch(train_loader, model, optimizer, epoch, device=device, is_adversial=False, scaler=scaler)
-        valid_loss = valid(valid_loader, model, device, epoch, args.num_beams, args.file_valid)
+        # valid_loss = valid(valid_loader, model, device, epoch, args.num_beams, args.file_valid)
 
         tb_writer.add_scalar('train loss', train_loss, epoch)
-        tb_writer.add_scalar('valid loss', valid_loss, epoch)
+        # tb_writer.add_scalar('valid loss', valid_loss, epoch)
         tb_writer.add_scalar('lr', cur_lr, epoch)
         if (epoch + 1) % 5 == 0:
             save_model(model, model_dir, args.model_name, epoch)
@@ -74,6 +81,7 @@ def main(args):
 
 def train_one_epoch(train_loader, model, optimizer, epoch, device, is_adversial, scaler):
     model.train()
+    # model.load_state_dict(torch.load(file_valid))
     num_steps = len(train_loader)
     mean_loss = torch.zeros(1).to(device)
     mean_lm_loss = torch.zeros(1).to(device)
@@ -165,7 +173,7 @@ if __name__ == '__main__':
     parser.add_argument('--device', default='cuda:0', help='device id (i.e. 0 or 0,1 or cpu)')
     parser.add_argument('--is_need_frozen', default=False, type=int, help='')
     parser.add_argument('--num_beams', default=2, type=int, help='')
-    parser.add_argument('--file_valid', default='./model/model/facebook/bart-base-9.pth', help='')
+    parser.add_argument('--file_valid', default='./model/model/facebook/bart-base-99.pth', help='')
     opt = parser.parse_args()
     opt.filename = None
     main(opt)

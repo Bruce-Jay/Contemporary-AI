@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="root@i-1.gpushare.com:62786 password" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="ubuntu@106.75.217.47:22 password (3)" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="1">
+      <paths name="ubuntu@106.75.217.47:22 password">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/tmp/pycharm_project_64" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="root@i-1.gpushare.com:62786 password">
+      <paths name="ubuntu@106.75.217.47:22 password (2)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/pycharm_project_415" local="$PROJECT_DIR$" />
+            <mapping deploy="/tmp/pycharm_project_2" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="ubuntu@106.75.217.47:22 password (3)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_214" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

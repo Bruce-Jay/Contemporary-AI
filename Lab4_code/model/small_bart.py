@@ -6,15 +6,15 @@ class Seq2SeqModel(nn.Module):
         super(Seq2SeqModel, self).__init__()
         self.new_config = BartConfig(
             vocab_size=vocab_size,
-            max_position_embeddings=1024,
+            max_position_embeddings=3072,
             encoder_layers=6,
-            encoder_ffn_dim=1024,
+            encoder_ffn_dim=3072,
             encoder_attention_heads=16,
             decoder_layers=6,
-            decoder_ffn_dim=1024,
+            decoder_ffn_dim=3072,
             decoder_attention_heads=16,
             activation_function="gelu",
-            d_model=256,
+            d_model=768,
             dropout=0.5,
             attention_dropout=0.0,
             scale_embedding=False,
@@ -30,7 +30,7 @@ class Seq2SeqModel(nn.Module):
         self.bart_model = BartForConditionalGeneration.from_pretrained(model_name, config=self.new_config,
                                                                        ignore_mismatched_sizes=True)
         print('hidden_size:', self.bart_model.config.hidden_size)  # 输出默认的隐藏维度大小，为768
-        print('d_model', self.bart_model.config.d_model)  # 输出默认的维度大小，为768
+        print('d_model', self.bart_model.config.d_model)  # 输出默认的维度大小，为768, 此处的 hidden_size 就是 d_model
 
         self.label_smoothing = label_smoothing
         print(self.new_config.hidden_size, self.new_config.vocab_size)

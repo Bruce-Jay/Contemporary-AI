@@ -6,7 +6,9 @@ from transformers import get_linear_schedule_with_warmup
 def get_cos_schedule_with_warmup(optimizer, num_warmup_steps, epochs, lrf, last_epoch=-1):
     def lr_lambda(current_step: int):
         if current_step < num_warmup_steps:
+            # return float(current_step + 1) / float(max(1, current_step + 1))
             return float(current_step + 1) / float(max(1, num_warmup_steps))
+            # return float(num_warmup_steps) / float(max(1, current_step + 1))
         epoch = (epochs - num_warmup_steps) // 1
         step = (current_step - num_warmup_steps) % epoch
         return max(
